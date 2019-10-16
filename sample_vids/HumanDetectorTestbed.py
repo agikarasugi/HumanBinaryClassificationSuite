@@ -49,7 +49,7 @@ while True:
     orig_image = frame
 
     edged = cv.Canny(mask_image, 10, 250)
-#     cv.imshow("Edges", edged)
+    cv.imshow("Edges", edged)
 
     _, cnts, _ = cv.findContours(edged.copy(), cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
 
@@ -73,7 +73,7 @@ while True:
 #                 print(classification[0][0])
 #                 cv.imshow('ROI', resized_img[0])
                 cv.rectangle(orig_image, (x, y), (x+w, y+h), (255,0,0), 2)
-                cv.imshow("Detected", orig_image)
+                # cv.imshow("Detected", orig_image)
 
         curr_frame = str(capture.get(cv.CAP_PROP_POS_FRAMES))
         cv.rectangle(orig_image, (10, 2), (100,20), (255,255,255), -1)
