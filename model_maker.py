@@ -44,9 +44,9 @@ test_image = test_image / 255.0
 
 now = datetime.now()
 dt_string = now.strftime("%d%m%Y-%H%M")
-                
+
 name = dt_string
-                
+
 foldername = './models/' + name + '/'
 os.mkdir(foldername)
 
@@ -66,32 +66,32 @@ class CustomModelCheckpoint(tf.keras.callbacks.Callback):
         x, y = self.test_data
         loss, acc = self.model.evaluate(x, y, verbose=0)
         print('\nTesting loss: {}, acc: {}\n'.format(loss, acc))
-        
+
         if acc > self.max_acc:
             self.max_acc = acc
-        
+
         if loss < self.min_loss:
             self.min_loss = loss
-            
+
             if loss < self.max_loss_to_save:
                 mnow = datetime.now()
                 mdt_string = mnow.strftime("%d%m%Y-%H%M")
-                
+
                 mname = 'l{:4.0f}-a{:2.0f}-'.format(loss*10000, acc*100) + dt_string
-                
+
                 filename = foldername + mname
-                
+
                 print('Saving model as {}...\n\n'.format(filename))
-                plot_model(model, to_file=(filename+'.jpg'), show_shapes=True)
+                plot_model(model, to_file=(filename+'.png'), show_shapes=True)
                 model.save(filename+'.h5')
-                
+
         if loss > self.min_loss:
             self.counter += 1
-            
+
             if self.counter > 15 or loss > 0.65:
                 print('Model hasn\'t improved in a while, cancelling training')
                 self.model.stop_training = True
-    
+
     def on_train_end(self, logs={}):
         print('\n\n\nSUMMARRY')
         print('========')
@@ -105,18 +105,12 @@ model = tf.keras.models.Sequential(layers=[
     tf.keras.layers.Conv2D(16, (3, 3), activation=tf.nn.relu,
                             input_shape=(image_size_x, image_size_y, 3)),
     tf.keras.layers.MaxPooling2D(2, 2),
-    tf.keras.layers.Conv2D(32, (3, 3), activation=tf.nn.relu),
+    tf.keras.layers.Conv2D(16, (3, 3), activation=tf.nn.leaky_relu),
     tf.keras.layers.MaxPooling2D(2, 2),
     tf.keras.layers.Conv2D(32, (3, 3), activation=tf.nn.relu),
     tf.keras.layers.MaxPooling2D(2, 2),
     tf.keras.layers.Flatten(),
-#     tf.keras.layers.Dense(256, activation=tf.nn.relu),
-#     tf.keras.layers.Dropout(0.8),
-    tf.keras.layers.Dense(128, activation=tf.nn.relu),
-#     tf.keras.layers.Dropout(0.8),
     tf.keras.layers.Dense(64, activation=tf.nn.relu),
-#     tf.keras.layers.Dropout(0.8),
-#     tf.keras.layers.Dense(8, activation=tf.nn.relu),
     tf.keras.layers.Dense(1, activation='sigmoid')
 ])
 
@@ -124,7 +118,7 @@ model = tf.keras.models.Sequential(layers=[
 # In[7]:
 
 
-model.compile(optimizer=tf.keras.optimizers.RMSprop(lr=0.001),
+model.compile(optimizer='adam',
                 loss='binary_crossentropy',
                 metrics=['acc'])
 
@@ -138,7 +132,7 @@ model.summary()
 # In[9]:
 
 
-history = model.fit(train_image, train_label, epochs=15, 
+history = model.fit(train_image, train_label, epochs=15,
           validation_split=0.25, shuffle=True,
           callbacks=[CustomModelCheckpoint((test_image, test_label), 0.30)],
                    verbose=1)
@@ -174,4 +168,3 @@ plt.xlabel('Epoch')
 plt.legend(['Train', 'Test'], loc='upper left')
 plt.savefig(filename + '_gloss.png', dpi=64)
 plt.show()
-

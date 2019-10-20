@@ -1,0 +1,106 @@
+Versi Bahasa Indonesia ada di bawah
+
+===========
+= ENGLISH =
+===========
+
+Make sure the directory structure is the exact same as this
+
+/
+| frame_grabber.py
+| frame-grab/
+	| blob_extractor.py
+	| outs/
+
+
+!!WARNING!!
+-----------
+* the directories have been populated by images from the sample video
+  before following the steps below, please delete those images first
+
+* ROI images in ./frame-grab/outs/ can be used in step 6
+
+
+STEPS:
+1. Put a video file in the root folder
+
+2. Run frame_grabber.py using command:
+
+	python frame_grabber.py --algo [MOG2|KNN] --input [VIDEOFILE] --skip [FRAME SKIP FREQ]
+	
+   Adjust frame skip with the video's framerate and duration if you want to limit the size of dataset
+   If you want to process each frame, don't user --skip parameter (defaults to 1)
+
+3. Navigate to ./frame-grab/
+   If step 2 have already been executed, there will be two types of image in the directory: *-mask.jpg & *-img.jpg
+
+4. Execute blob_extractor.py
+
+	python blob_extractor.py
+
+   !!WARNING!!
+   -----------
+   After executing blob extractor, delete all *-mask.jpg & *-img.jpg images 
+   to ensure no duplicates in executing frame grabber for the next video
+
+5. Navigate to ./outs
+
+   If step 4 has already been executed, there should be many *.png images
+   This images are ROI that will used as the dataset
+
+6. Move the images that describes human to 'human' folder, then move the rest to 'nonhuman' folder
+
+7. Rinse and repeat! :)
+
+
+
+
+
+==========
+= BAHASA =
+==========
+
+Pastikan directory seperti ini
+
+/
+| frame_grabber.py
+| frame-grab/
+	| blob_extractor.py
+	| outs/
+
+
+!!WARNING!!
+-----------
+* directory nya sudah terpopulasi pakai gambar dari sample video, 
+  ingat dihapus dulu sebelum melakukan step dibawah!!
+
+* gambar yang di ./frame-grab/outs/ bisa kalian pakai di step 6
+
+
+STEPS:
+1. Taruh video yg mau di framegrab di root folder
+
+2. Jalankan frame_grabber.py memakai command:
+
+	python frame_grabber.py --algo MOG2 --input [FILE_VIDEO] --skip [FREKUENSI SKIP FRAME]
+	
+   Sesuaikan frekuensi skip frame dengan durasi video atau intuisi kalau ingin membatasi jumlah dataset
+   Jika tidak, maka tidak usah memakai argumen skip (nilai default nya 1)
+
+3. Navigate ke ./frame-grab/
+   Seharusnya kalau step 2 sudah dijalankan, terdapat dua jenis gambar: *-mask.jpg & *-img.jpg
+
+4. Jalankan blob_extractor.py
+
+	python blob_extractor.py
+
+   !!WARNING!!
+   -----------
+   Ingat kalau sudah dijalankan, bersihkan/delete semua gambar yg udah diproses agar tidak duplikat hasilnya nanti
+
+5. Navigate ke ./outs
+   Kalau step 4 sudah dijalankan, seharusnya ada gambar *.png
+
+6. Pindahkan gambar yang mendeskripsikan manusia di folder 'human', selain itu taruh di 'nonhuman'
+
+7. Rinse and repeat! :)
